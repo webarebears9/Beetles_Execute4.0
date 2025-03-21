@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        body {
+            background-color: #0d0d0d;
+            color: #ffffff;
+            text-align: center;
+            overflow: hidden;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(135deg, #1c1c1c, #2d2d2d);
+            padding: 20px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #ff4757;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .page {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            background: #121212;
+        }
+        h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #ff4757;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #cccccc;
+        }
+        .btn {
+            background: linear-gradient(45deg, #ff4757, #ff6b81);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+        }
+        .btn:hover {
+            background: linear-gradient(45deg, #e84118, #ff4757);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.5);
+        }
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(255, 71, 87, 0.2);
+        }
+        input {
+            padding: 12px 20px;
+            margin: 10px;
+            width: 80%;
+            max-width: 400px;
+            font-size: 16px;
+            border: 1px solid #333;
+            border-radius: 25px;
+            background: #1c1c1c;
+            color: #fff;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            border-color: #ff4757;
+            box-shadow: 0 0 8px rgba(255, 71, 87, 0.3);
+        }
+        .google-btn {
+            margin: 10px;
+            width: 200px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #1c1c1c;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            width: 50%;
+            max-width: 400px;
+        }
+        .result h3 {
+            margin-top: 0;
+            color: #ff4757;
+        }
+        .result p {
+            margin: 10px 0;
+            color: #cccccc;
+        }
+        .chatbot-embed {
+            margin-top: 20px;
+            width: 100%;
+            height: 80vh;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <header>Fraud Detection System</header>
+    <div class="container">
+        <!-- Login Page (1st Slide) -->
+        <div class="page" id="login-page">
+            <h2>Login</h2>
+            <p>Please enter any email and password to continue.</p>
+            <div class="form-group">
+                <input type="email" id="email" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" placeholder="Enter password">
+            </div>
+            <button class="btn" onclick="signInWithEmail()">Sign in with Email</button>
+            <button class="btn google-btn" onclick="signInWithoutAuth()">Continue Without Sign-In</button>
+        </div>
+
+        <!-- Welcome Page (2nd Slide) -->
+        <div class="page" id="welcome-page" style="display: none;">
+            <h2>Welcome to Fraud Detection System</h2>
+            <p>This platform helps you detect fraudulent transactions using advanced AI/ML models.</p>
+            <p>Click below to proceed.</p>
+            <button class="btn" onclick="navigateToChatbotPage()">Chat with Support</button>
+            <button class="btn" onclick="fetchFraudResult()">View Sample Result</button>
+        </div>
+
+        <!-- Chatbot Page (3rd Slide) -->
+        <div class="page" id="chatbot-page" style="display: none;">
+            <h2>Support Chatbot</h2>
+            <iframe class="chatbot-embed" src="https://landbot.online/v3/H-2840039-OF7IY65WKLAIF1D8/index.html" allowfullscreen></iframe>
+            <button class="btn" onclick="navigateToResultPage()">View Sample Result</button>
+        </div>
+
+        <!-- Fraud Detection Result Page (4th Slide) -->
+        <div class="page" id="fraud-detection-page" style="display: none;">
+            <h2>Fraud Detection Result</h2>
+            <div class="result" id="result">
+                <h3>Result will be displayed here</h3>
+            </div>
+            <button class="btn" onclick="navigateToChatbotPage()">Back to Chatbot</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to handle Email "Sign-In" (no real authentication)
+        function signInWithEmail() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            if (email.trim() === "" || password.trim() === "") {
+                alert("Please enter both email and password.");
+            } else {
+                alert("Proceeding with email: " + email);
+                navigateToWelcomePage();
+            }
+        }
+
+        // Function to proceed without any authentication
+        function signInWithoutAuth() {
+            alert("Proceeding without authentication.");
+            navigateToWelcomePage();
+        }
+
+        // Function to navigate to Welcome Page
+        function navigateToWelcomePage() {
+            document.getElementById("login-page").style.display = "none";
+            document.getElementById("welcome-page").style.display = "flex";
+        }
+
+        // Function to navigate to Chatbot Page
+        function navigateToChatbotPage() {
+            document.getElementById("welcome-page").style.display = "none";
+            document.getElementById("fraud-detection-page").style.display = "none";
+            document.getElementById("chatbot-page").style.display = "flex";
+        }
+
+        // Function to fetch a sample fraud result and navigate to Result Page
+        function fetchFraudResult() {
+            const sampleTransaction = {
+                transaction_date: "03/21/2025 12:00",
+                transaction_amount: "100.50",
+                transaction_channel: "online",
+                transaction_payment_mode: "credit_card",
+                payment_gateway_bank: "BankA",
+                payer_browser: "Chrome",
+                payer_email: "user@example.com",
+                payee_ip: "192.168.1.1",
+                payer_mobile: "1234567890",
+                transaction_id: "TX123",
+                payee_id: "PAYEE456",
+                use_rule_engine: false
+            };
+
+            fetch("/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(sampleTransaction)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(HTTP error! status: ${response.status});
+                }
+                return response.json();
+            })
+            .then(data => {
+                const resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = `
+                    <h3>Fraud Detection Result</h3>
+                    <p><strong>Transaction ID:</strong> ${sampleTransaction.transaction_id}</p>
+                    <p><strong>Is Fraud:</strong> ${data.is_fraud ? "Yes" : "No"}</p>
+                    <p><strong>Fraud Probability:</strong> ${(data.fraud_probability * 100).toFixed(2)}%</p>
+                `;
+                document.getElementById("welcome-page").style.display = "none";
+                document.getElementById("chatbot-page").style.display = "none";
+                document.getElementById("fraud-detection-page").style.display = "flex";
+            })
+            .catch(error => {
+                const resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = <h3>Error</h3><p>Failed to fetch result: ${error.message}</p>;
+                document.getElementById("welcome-page").style.display = "none";
+                document.getElementById("chatbot-page").style.display = "none";
+                document.getElementById("fraud-detection-page").style.display = "flex";
+            });
+        }
+
+        // Function to navigate to Result Page (from Chatbot)
+        function navigateToResultPage() {
+            fetchFraudResult();
+        }
+    </script>
+</body>
+</html>
